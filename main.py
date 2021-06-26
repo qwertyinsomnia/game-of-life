@@ -48,6 +48,12 @@ def initScreen(sizex, sizey, pixel_size):
     pygame.draw.line(screen, BLACK, [195, sizey + 15], [235, sizey + 15], 3)
     pygame.draw.line(screen, BLACK, [215, sizey + 35], [215, sizey + 55], 10)
 
+    # record icon
+    pygame.draw.rect(screen, WHITE, [250, sizey + 10, 50, 50])
+    pygame.draw.polygon(screen, BLACK, [[255, sizey + 25], [255, sizey + 45], [270, sizey + 35]])
+    pygame.draw.rect(screen, BLACK, [265, sizey + 25, 20, 20])
+    pygame.draw.circle(screen, BLACK, [285, sizey + 25], 10)
+
     pygame.display.flip()
 
 
@@ -153,8 +159,6 @@ def ScreenRecord():
 
     rect = pygame.Rect(0, 0, sizex, sizey)
     sub = screen.subsurface(rect)
-    print(path_screenshots + "ss_" + str(ss_cnt) + "_" +
-          time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + ".jpg")
     cv2.imwrite(path_screenshots + "ss_" + str(ss_cnt) + "_" +
                 time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + ".jpg", im_rd)
     pygame.image.save(sub, "screenshot.jpg")
@@ -163,6 +167,7 @@ def ScreenRecord():
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
+RED = (255, 0, 0)
 GREY = (20, 20, 20)
 
 size = [800, 600]
@@ -188,6 +193,7 @@ print(int(sizex / pixel_size), int(sizey / pixel_size))
 done = False
 clock = pygame.time.Clock()
 initScreenflag = True
+screen_record_flag = 0
 mouse_cell_add = 0
 
 mRunning = True
@@ -234,13 +240,38 @@ while mRunning:
             if (sizey + 50) > pygame.mouse.get_pos()[1] > (sizey + 10) and 240 > pygame.mouse.get_pos()[0] > 190:
                 SwitchImport(int(sizex / pixel_size), int(sizey / pixel_size))
 
-
+            # record data
+            if (sizey + 50) > pygame.mouse.get_pos()[1] > (sizey + 10) and 300 > pygame.mouse.get_pos()[0] > 250:
+                if not screen_record_flag:
+                    screen_record_flag = 1
+                    screenshot_index = 0
+                    time_now = time.strftime("%Y%m%d-%H%M", time.localtime())
+                    path = "screenshots" + '\\' + time_now
+                    if not os.path.exists(path):
+                        os.makedirs(path)
+                        print('文件夹创建完成  ' + path)
+                    pygame.draw.polygon(screen, RED, [[255, sizey + 25], [255, sizey + 45], [270, sizey + 35]])
+                    pygame.draw.rect(screen, RED, [265, sizey + 25, 20, 20])
+                    pygame.draw.circle(screen, RED, [285, sizey + 25], 10)
+                    pygame.display.update()
+                else:
+                    screen_record_flag = 0
+                    pygame.draw.polygon(screen, BLACK, [[255, sizey + 25], [255, sizey + 45], [270, sizey + 35]])
+                    pygame.draw.rect(screen, BLACK, [265, sizey + 25, 20, 20])
+                    pygame.draw.circle(screen, BLACK, [285, sizey + 25], 10)
+                    pygame.display.update()
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 UpdateWorld(int(sizex / pixel_size), int(sizey / pixel_size), pixel_size)
+
     if play_flag:
         UpdateWorld(int(sizex / pixel_size), int(sizey / pixel_size), pixel_size)
+        if screen_record_flag:
+            screenshot_index += 1
+            rect = pygame.Rect(0, 0, sizex, sizey)
+            sub = screen.subsurface(rect)
+            pygame.image.save(sub, path + "\\screenshot_" + str(screenshot_index) + ".jpg")
         time.sleep(0.2)
 
     if initScreenflag:
