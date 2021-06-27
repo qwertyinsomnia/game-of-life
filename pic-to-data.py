@@ -1,9 +1,10 @@
 import numpy as np
 from PIL import Image
 
-step = 10
+step = 1
 
-image = Image.open("Gosper-glider-gun.jpg")
+name = "pixelself"
+image = Image.open(name + ".jpg")
 img=np.array(image.convert("RGB").split()[0])
 
 # print(img)
@@ -19,10 +20,10 @@ for i in range(int(sizey / step)):
             cell_state[i][j] = 1
 
 data = np.array(cell_state)
-np.savetxt('out.txt', data, fmt="%d", delimiter=' ')
+np.savetxt(name + '.txt', data, fmt="%d", delimiter=' ')
 
 size = 0
-with open('out.txt') as f:
+with open(name + '.txt') as f:
     for line in f:
         # print(line, end='')
         size += 1

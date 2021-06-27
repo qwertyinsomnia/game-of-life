@@ -133,7 +133,7 @@ def SwitchScreenShot():
 def SwitchImport(scale_x, scale_y):
     print("import data!")
     row = 0
-    with open('out.txt') as f:
+    with open(import_data) as f:
         for line in f:
             for col in range(int(len(line) / 2)):
                 if (line[col * 2 ] == "1"):
@@ -170,20 +170,20 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 GREY = (20, 20, 20)
 
-size = [800, 600]
+size = [600, 800]
 sizex = size[0]
 sizey = size[1]
 menu_height = 80
-pixel_size = 10
+pixel_size = 1
 
-play_flag = 0
-mouse_click_flag = 0
+import_data = "pixelself.txt"
+
 temp_x0 = -pixel_size
 temp_y0 = -pixel_size
 
 pygame.init()
 pygame.font.init()
-pygame.display.set_caption("test")
+pygame.display.set_caption("Game-of-Life")
 screen = pygame.display.set_mode([sizex, sizey + menu_height])
 
 cell_nowstate = [[0] * int(sizey / pixel_size) for i in range(int(sizex / pixel_size))]
@@ -195,6 +195,8 @@ clock = pygame.time.Clock()
 initScreenflag = True
 screen_record_flag = 0
 mouse_cell_add = 0
+play_flag = 0
+mouse_click_flag = 0
 
 mRunning = True
 while mRunning:
