@@ -54,6 +54,9 @@ def initScreen(sizex, sizey, pixel_size):
     pygame.draw.rect(screen, BLACK, [265, sizey + 25, 20, 20])
     pygame.draw.circle(screen, BLACK, [285, sizey + 25], 10)
 
+    # 
+    # pygame.draw.rect(screen, WHITE, [310, sizey + 10, 50, 50])
+
     pygame.display.flip()
 
 
@@ -120,6 +123,7 @@ def SwitchRecover():
     pygame.display.update()
 
 def SwitchScreenShot():
+    pygame.draw.rect(screen, GREY, [0, sizey + 60, 500, 20])
     text = pygame.font.SysFont("C:/Windows/Fonts/simhei.ttf", 20)
     text_fmt = text.render("screenshot saved!", False, (255, 255, 255))
     screen.blit(text_fmt, (10, sizey + 60))
@@ -133,6 +137,20 @@ def SwitchScreenShot():
 def SwitchImport(scale_x, scale_y):
     print("import data!")
     row = 0
+    data_size_y = len(open(import_data,'rU').readlines())
+    data_size_x = len(open(import_data,'rU').readlines()[0])
+    data_size_x = int(data_size_x / 2)
+    print("import data:", data_size_x, data_size_y)
+    print("canvas scale:", scale_x, scale_y)
+
+    if data_size_x != scale_x or data_size_y != scale_y:
+        pygame.draw.rect(screen, GREY, [0, sizey + 60, 500, 20])
+        text = pygame.font.SysFont("C:/Windows/Fonts/simhei.ttf", 20)
+        text_fmt = text.render("unfitable import data", False, (255, 255, 255))
+        screen.blit(text_fmt, (10, sizey + 60))
+        pygame.display.update()
+        return 0
+
     with open(import_data) as f:
         for line in f:
             for col in range(int(len(line) / 2)):
@@ -151,6 +169,7 @@ def SwitchImport(scale_x, scale_y):
     pygame.display.update()
 
 def ScreenRecord():
+    pygame.draw.rect(screen, GREY, [0, sizey + 60, 500, 20])
     text = pygame.font.SysFont("C:/Windows/Fonts/simhei.ttf", 20)
     text_fmt = text.render("screenshots saved!", False, (255, 255, 255))
     screen.blit(text_fmt, (10, sizey + 60))
@@ -164,19 +183,21 @@ def ScreenRecord():
     pygame.image.save(sub, "screenshot.jpg")
 
 
+
+###############################################
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 GREY = (20, 20, 20)
 
-size = [600, 800]
+pixel_size = 4
+size = [379*pixel_size, 192*pixel_size]
 sizex = size[0]
 sizey = size[1]
 menu_height = 80
-pixel_size = 1
 
-import_data = "pixelself.txt"
+import_data = "data\\borner.txt"
 
 temp_x0 = -pixel_size
 temp_y0 = -pixel_size
